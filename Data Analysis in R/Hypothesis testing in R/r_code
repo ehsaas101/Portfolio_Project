@@ -1,0 +1,47 @@
+#Dataset used: Covid-19 deaths data grouped by age and gender.
+
+rm(list=ls())  #removes all variables stored previously
+library(Hmisc)
+
+data<-COVID19_line_list_data <- read.csv("COVID19_line_list_data.csv")
+describe(data)  #Hmisc command
+
+#data cleaning(The death column contains values other than 0 and 1 which needs to be fixed for analysis) )
+data$death_dummy <- as.integer(data$death != 0)
+
+#death rate
+sum(data$death_dummy)/nrow(data)
+#death rate = 0.0.058
+
+#Age
+#Claim : People who die are older
+
+dead = subset(data,death_dummy==1)
+alive = subset(data,death_dummy==0)
+mean(dead$age, na.rm = TRUE)
+mean(alive$age, na.rm = TRUE)
+
+#Is this difference statistically significant?
+# Ho= There is no significant difference between the ages of dead and alive people
+# H1= Ages of dead and alive people differ significantly(refer to claim)
+t.test(dead$age, alive$age, alternative="two.sided", conf.level = 0.95)
+# If p value < 0.05, we reject Ho otherwise we accept it.
+#Since p value ~ 0, we reject the null hypothesis and conclude that the mean ages of dead and alive people differ significantly
+#Hence the claim is correct
+
+#GENDER 
+#Claim : Gender has no effect
+
+male = subset(data,gender=="male")
+female = subset(data,gender=="female")
+mean(male$death_dummy, na.rm = TRUE) # 8.4%
+mean(female$death_dummy, na.rm = TRUE) # 3.6%
+
+#Is this difference statistically significant?
+# Ho= There is no significant difference between the no. of dead men and dead women.
+# H1= No. of dead men and dead women differ significantly.
+t.test(male$death_dummy, female$death_dummy, alternative="two.sided", conf.level = 0.99)
+# If p value < 0.01, we reject Ho otherwise we accept it.
+#Since p value = 0.002105, we reject the null hypothesis and conclude that the mean no. of dead men and women differ significantly
+#99% confidence : Men have a 0.8% to 8.8% higher chance of dying
+#Hence the claim is correct
