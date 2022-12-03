@@ -1,3 +1,6 @@
+Dataset used : Covid_19 deaths and Covid_19 vaccinations
+Skills used: Joins, Window Functions, Aggregate Functions, CTEs, Temp Tables, Creating view, Conversion of data types.
+
 --Overview of the Datasets
 
 SELECT *
