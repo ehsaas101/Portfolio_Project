@@ -1,0 +1,53 @@
+library(Hmisc)         # Includes describe fn
+library(tidyverse)     # Includes ggplot and all other statistical tools
+library(lubridate)     # Includes ymd fn
+library(scales)        # Includes scales
+rm(list=ls())
+
+countries<-c("India","United States","France","China","Canada")
+data=subset(covid19_deaths,location %in% countries)
+View(data)
+describe(data)   
+xaax all NA values by zero.
+data<-mutate(data,date_read = dmy(data$date),death_percent=percent(data$total_deaths/data$total_cases))
+
+#Total cases and Maximum single day cases 
+
+data %>%
+  group_by(location) %>%
+  summarise(cases_sum = sum(total_cases),cases_max = max(total_cases)) %>%
+  arrange(desc(cases_sum))
+#United States has maximum no.of cases till date
+
+#Death details
+data %>%
+  group_by(location) %>%
+  summarise(
+             count = n(),
+             mean_deaths = mean(total_deaths,na.rm=TRUE),
+             max_deaths = max(total_deaths,na.rm=TRUE)
+           ) %>%
+  arrange(desc(mean_deaths))
+
+#Plots
+
+china <- subset(data,location == "China")
+india <- subset(data,location == "India")
+united_states <- subset(data,location == "United States")
+france <- subset(data,location == "France")
+canada <- subset(data,location == "Canada")
+  
+options(scipen = 999)                 #Avoids scientific notation in y-axis
+ggplot(india,aes(x=date_read, y=(new_cases))) +
+  geom_col(fill = "Red", alpha = 0.8) +
+  scale_x_date("Date",date_labels = "%Y-%m-%d") +
+  labs(title = "Daily Covid-19 Cases in India") +
+  scale_y_continuous("New cases",labels = scales::comma)  #Under the scales package
+
+ggplot(data,aes(x=date_read, y=(new_cases))) +
+  geom_col(fill = "Red", alpha = 0.8) +
+  scale_x_date("Date",date_labels = "%Y-%m-%d") +
+  labs(title = "Daily Covid-19 Cases in India") +
+  scale_y_continuous("New cases",labels = scales::comma)+
+  facet_wrap(~location)
+
