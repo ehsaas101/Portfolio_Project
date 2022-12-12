@@ -3,8 +3,7 @@
 SELECT *
 FROM  dbo.Housing
 
---Standardizing Date Format : The field "SaleDate" includes the Date and time of the sale but on close observation we notice that the time of sale is not present
---in our data. So the purpose of upcoming query is to change the format of this field from Date-Time to Date.
+--Standardizing Date Format : The field "SaleDate" includes the Date and time of the sale but on close observation we notice that the time of sale is not present in our data. So the purpose of upcoming query is to change the format of this field from Date-Time to Date.
 
 SELECT SaleDate
 FROM  dbo.Housing
@@ -18,9 +17,7 @@ SELECT SaleDate, SaleDateConverted
 FROM  dbo.Housing
 
 
---Populating Property Address date : The PropertyAddress field appears to be filled with many null values. We cannot generally populate these cells but in our case, we
---see that addresses of some Parcel ID's are not null which means that we can populate the null values in the PropertyAddress field with those addresses which have the 
---same Parcel ID as the null values.
+--Populating Property Address date : The PropertyAddress field appears to be filled with many null values. We cannot generally populate these cells but in our case, we see that addresses of some Parcel ID's are not null which means that we can populate the null values in the PropertyAddress field with those addresses which have the same Parcel ID as the null values.
 
 SELECT *
 FROM  dbo.Housing
